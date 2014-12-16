@@ -5,6 +5,10 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>simple project</name>
+  
+  <modules>
+  	<module>web-app</module>
+  </modules>
   <properties>
   	<boot.class.path>${java.home}/lib/rt.jar;${java.home}/lib/jce.jar</boot.class.path>
   </properties>
