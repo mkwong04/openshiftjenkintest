@@ -1,36 +1,82 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>simpleweb</groupId>
-  <artifactId>simpleweb</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>simple project</name>
-  
-  <modules>
-  	<module>web-app</module>
-  </modules>
-  <properties>
-  	<boot.class.path>${java.home}/lib/rt.jar;${java.home}/lib/jce.jar</boot.class.path>
-  </properties>
-  <build>
-  	<plugins>
-  		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-  			<artifactId>maven-compiler-plugin</artifactId>
-  			<version>3.2</version>
-  			<configuration>
-  				<verbose>true</verbose>
-  				<fork>true</fork>
-  				<compilerVersion>1.7</compilerVersion>
-  				<source>1.7</source>
-  				<target>1.7</target>
-  				<encoding>UTF-8</encoding>
-  				<compilerArguments>
-  					<verbose/>
-  					<bootclasspath>${boot.class.path}</bootclasspath>
-  				</compilerArguments>
-  			</configuration>
-  		</plugin>
-  	</plugins>
-  </build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>simpleweb</groupId>
+	<artifactId>simpleweb</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>simple project</name>
+
+	<modules>
+		<module>web-app</module>
+	</modules>
+	<properties>
+		<boot.class.path>${java.home}/lib/rt.jar;${java.home}/lib/jce.jar</boot.class.path>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<compilerVersion>1.7</compilerVersion>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+					<compilerArguments>
+						<verbose />
+						<bootclasspath>${boot.class.path}</bootclasspath>
+					</compilerArguments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>openshift</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<!-- Git repo is checked out into /var/lib/openshift/54895edffcf933029d000179/app-root/runtime/repo 
+							and Maven is started in this directory. Deployable artifacts, mainly ROOT.war, 
+							must be copiend into /var/lib/openshift/54895edffcf933029d000179/app-root/runtime/repo/webapps/ROOT.war 
+							Because web-app is module in subdirectory and I would expect <outputDirectory>../webapps</outputDirectory> 
+							value but interestingly it is not true and it must be <outputDirectory>webapps</outputDirectory> -->
+						<plugin>
+							<artifactId>maven-war-plugin</artifactId>
+							<configuration>
+								<outputDirectory>webapps</outputDirectory>
+								<warName>web-app</warName> <!-- http://wotan-anthavio.rhcloud.com/wotan -->
+								<!-- <warName>ROOT</warName> http://wotan-anthavio.rhcloud.com/ -->
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-enforcer-plugin</artifactId>
+							<configuration>
+								<skip>true</skip>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		<!-- 	<repositories>
+				<repository>
+					<id>sonatype-oss-public</id>
+					<url>https://oss.sonatype.org/content/groups/public</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories> -->
+
+		</profile>
+	</profiles>
 </project>
